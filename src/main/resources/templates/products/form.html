@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${editId} == null ? 'Add product' : 'Edit product')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main>
+    <h1 th:text="${editId} == null ? 'Add product' : 'Edit product'">Add product</h1>
+    <form class="card form" th:object="${form}" method="post"
+          th:action="${editId} == null ? @{/products} : @{/products/{id}(id=${editId})}">
+        <div class="flash err" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
+        <label>Name <input th:field="*{name}"><small class="fielderr" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small></label>
+        <label>Category <input th:field="*{category}" placeholder="Snacks, Beverages…"><small class="fielderr" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></small></label>
+        <label>Unit <input th:field="*{unit}" placeholder="plate, cup, piece"><small class="fielderr" th:if="${#fields.hasErrors('unit')}" th:errors="*{unit}"></small></label>
+        <label>Selling price (₹) <input th:field="*{price}" type="number" step="0.01"><small class="fielderr" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></small></label>
+        <label th:if="${editId == null}">Opening stock <input th:field="*{stock}" type="number"><small class="fielderr" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></small></label>
+        <input th:if="${editId != null}" type="hidden" th:field="*{stock}">
+        <p th:if="${editId != null}" class="muted small">Stock is changed only through Purchases and Sales, so every change is recorded.</p>
+        <label>Reorder level <input th:field="*{reorderLevel}" type="number"><small class="fielderr" th:if="${#fields.hasErrors('reorderLevel')}" th:errors="*{reorderLevel}"></small></label>
+        <div class="row">
+            <button class="btn" type="submit">Save</button>
+            <a class="btn ghost" th:href="@{/products}">Cancel</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

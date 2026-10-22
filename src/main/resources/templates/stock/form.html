@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${mode} == 'sale' ? 'Sell' : 'Purchase')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="two-col">
+    <section>
+        <h1 th:text="${mode} == 'sale' ? 'Record a sale' : 'Record a purchase (stock in)'">Record a sale</h1>
+        <div th:replace="~{fragments/layout :: flash}"></div>
+        <form class="card form" th:object="${form}" method="post"
+              th:action="${mode} == 'sale' ? @{/sales} : @{/purchases}">
+            <label>Product
+                <select th:field="*{productId}">
+                    <option value="">— choose —</option>
+                    <option th:each="p : ${products}" th:value="${p.id}"
+                            th:text="${p.name} + '  (₹' + ${p.price} + ', ' + ${p.stock} + ' ' + ${p.unit} + ' left)'"
+                            th:disabled="${mode == 'sale' and p.outOfStock}">Tea</option>
+                </select>
+                <small class="fielderr" th:if="${#fields.hasErrors('productId')}" th:errors="*{productId}"></small>
+            </label>
+            <label>Quantity <input th:field="*{quantity}" type="number" min="1">
+                <small class="fielderr" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></small></label>
+            <label th:if="${mode == 'purchase'}">Cost per unit (₹) <input th:field="*{unitCost}" type="number" step="0.01" min="0">
+                <small class="fielderr" th:if="${#fields.hasErrors('unitCost')}" th:errors="*{unitCost}"></small></label>
+            <button class="btn" type="submit" th:text="${mode} == 'sale' ? 'Sell' : 'Add to stock'">Sell</button>
+        </form>
+    </section>
+    <section>
+        <h2>Latest activity</h2>
+        <table>
+            <thead><tr><th>Time</th><th>Type</th><th>Product</th><th class="num">Qty</th><th>By</th></tr></thead>
+            <tbody>
+            <tr th:each="m : ${recent}">
+                <td th:text="${@fmt.time(m.createdAt)}">time</td>
+                <td><span th:class="${m.type.name() == 'SALE'} ? 'tag low' : 'tag okay'" th:text="${m.type}">SALE</span></td>
+                <td th:text="${m.product.name}">Tea</td>
+                <td class="num" th:text="${m.quantity}">1</td>
+                <td th:text="${m.createdBy}">staff</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+digraph E {
+  rankdir=LR; graph [fontname="Helvetica", bgcolor="white"]; node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  product [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="#ccfbf1"><b>product</b></td></tr>
+    <tr><td align="left">PK id BIGINT</td></tr><tr><td align="left">name VARCHAR(100) UNIQUE</td></tr>
+    <tr><td align="left">category, unit</td></tr><tr><td align="left">price NUMERIC(10,2) ≥ 0</td></tr>
+    <tr><td align="left">stock INT  CHECK ≥ 0</td></tr><tr><td align="left">reorder_level INT</td></tr>
+    <tr><td align="left">created_at TIMESTAMPTZ</td></tr></table>>];
+  movement [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="#e0f2fe"><b>stock_movement</b></td></tr>
+    <tr><td align="left">PK id BIGINT</td></tr><tr><td align="left">FK product_id → product.id</td></tr>
+    <tr><td align="left">type PURCHASE | SALE</td></tr><tr><td align="left">quantity INT &gt; 0</td></tr>
+    <tr><td align="left">unit_price NUMERIC(10,2)</td></tr><tr><td align="left">created_by, created_at</td></tr></table>>];
+  user [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="#fef9c3"><b>app_user</b></td></tr>
+    <tr><td align="left">PK id BIGINT</td></tr><tr><td align="left">username UNIQUE</td></tr>
+    <tr><td align="left">password_hash (BCrypt)</td></tr><tr><td align="left">role MANAGER | STAFF</td></tr></table>>];
+  product -> movement [label="1 : many", fontname="Helvetica", fontsize=9];
+}

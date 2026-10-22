@@ -1,0 +1,54 @@
+# All secrets and environment-specific values come from ENVIRONMENT VARIABLES.
+# The value after ':' is a safe default for running on your own laptop.
+server:
+  port: ${PORT:8080}            # Render tells the app which port to use via PORT
+  error:
+    include-message: always     # show our friendly error text on the error page
+  forward-headers-strategy: framework   # behind Render's load balancer, trust X-Forwarded-* (https links)
+
+spring:
+  application:
+    name: smart-inventory
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:inventory}
+    username: ${DB_USER:inventory}
+    password: ${DB_PASSWORD:inventory}
+    hikari:
+      maximum-pool-size: 5      # free cloud database allows few connections
+  jpa:
+    hibernate:
+      ddl-auto: validate        # Flyway creates tables; Hibernate only checks they match
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+  thymeleaf:
+    cache: ${THYMELEAF_CACHE:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+app:
+  zone: Asia/Kolkata            # "today" means today in India
+  seed-demo: ${SEED_DEMO:true}  # create sample canteen products + 90 days of sales if DB is empty
+  manager-password: ${MANAGER_PASSWORD:Manager@123}
+  staff-password: ${STAFF_PASSWORD:Staff@123}
+  forecast:
+    history-days: 56            # how many past days the forecast learns from
+    test-days: 14               # last N days used to measure accuracy (MAE)
+    window: 7                   # moving average window
+    alpha: 0.3                  # exponential smoothing weight for the newest day
+    lead-time-days: 2           # days a supplier takes to deliver
+    service-z: 1.65             # 1.65 = ~95% chance of not running out during lead time
+
+logging:
+  level:
+    com.canteen.inventory: INFO

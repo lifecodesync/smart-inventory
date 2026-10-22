@@ -1,0 +1,10 @@
+# Tests use a SEPARATE database (inventory_test) so they never touch real data.
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${TEST_DB_NAME:inventory_test}
+    username: ${DB_USER:inventory}
+    password: ${DB_PASSWORD:inventory}
+    hikari:
+      maximum-pool-size: 12     # the concurrency test needs several connections at once
+app:
+  seed-demo: false

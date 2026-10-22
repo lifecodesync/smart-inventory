@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main>
+    <h1>Dashboard</h1>
+    <div class="tiles">
+        <div class="tile"><span>Products</span><b th:text="${d.summary.productCount}">12</b></div>
+        <div class="tile"><span>Stock value</span><b th:text="'₹' + ${#numbers.formatDecimal(d.summary.stockValue, 1, 'COMMA', 0, 'POINT')}">₹0</b></div>
+        <div class="tile"><span>Today's sales</span><b th:text="'₹' + ${#numbers.formatDecimal(d.today.revenue, 1, 'COMMA', 0, 'POINT')}">₹0</b>
+            <small th:text="${d.today.units} + ' units · ' + ${d.today.bills} + ' bills'"></small></div>
+        <div class="tile"><span>Last 7 days</span><b th:text="'₹' + ${#numbers.formatDecimal(d.last7Days.revenue, 1, 'COMMA', 0, 'POINT')}">₹0</b>
+            <small th:text="${d.last7Days.units} + ' units'"></small></div>
+        <div class="tile warn"><span>Low stock</span><b th:text="${d.summary.lowStock}">0</b></div>
+        <div class="tile bad"><span>Out of stock</span><b th:text="${d.summary.outOfStock}">0</b></div>
+    </div>
+
+    <section class="card">
+        <h2>Daily sales, last 14 days</h2>
+        <div class="chart">
+            <div class="bar" th:each="b : ${bars}">
+                <div class="fill" th:style="'height:' + ${b.pct} + '%'"
+                     th:title="${b.label} + ': ₹' + ${b.revenue} + ' (' + ${b.units} + ' units)'"></div>
+                <small th:text="${b.label}">Mon 01</small>
+            </div>
+        </div>
+    </section>
+
+    <div class="grid3">
+        <section class="card">
+            <h2>Best sellers (30 days)</h2>
+            <table><tbody>
+            <tr th:each="s : ${d.best}"><td th:text="${s.name}">Tea</td><td class="num" th:text="${s.units} + ' units'">0</td></tr>
+            </tbody></table>
+        </section>
+        <section class="card">
+            <h2>Slow sellers (30 days)</h2>
+            <table><tbody>
+            <tr th:each="s : ${d.slow}"><td th:text="${s.name}">Upma</td><td class="num" th:text="${s.units} + ' units'">0</td></tr>
+            </tbody></table>
+        </section>
+        <section class="card">
+            <h2>Alerts</h2>
+            <ul class="alerts">
+                <li th:each="a : ${alerts}" th:class="${a.level}">
+                    <b th:text="${a.productName}">Tea</b> <span th:text="${a.message}"></span></li>
+                <li th:if="${#lists.isEmpty(alerts)}" class="muted">No alerts. All good.</li>
+            </ul>
+            <a th:href="@{/forecast}">See forecast &amp; restock plan →</a>
+        </section>
+    </div>
+</main>
+</body>
+</html>

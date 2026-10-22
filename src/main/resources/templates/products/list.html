@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Products')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main>
+    <div class="row between">
+        <h1>Products</h1>
+        <a class="btn" th:href="@{/products/new}">+ Add product</a>
+    </div>
+    <div th:replace="~{fragments/layout :: flash}"></div>
+    <form class="search" th:action="@{/products}" method="get">
+        <input name="q" th:value="${q}" placeholder="Search name or category…">
+        <button class="btn ghost" type="submit">Search</button>
+    </form>
+    <table>
+        <thead><tr><th>Name</th><th>Category</th><th class="num">Price</th><th class="num">Stock</th><th class="num">Reorder at</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${products}">
+            <td th:text="${p.name}">Tea</td>
+            <td th:text="${p.category}">Beverages</td>
+            <td class="num" th:text="'₹' + ${#numbers.formatDecimal(p.price, 1, 2)}">₹10.00</td>
+            <td class="num" th:text="${p.stock} + ' ' + ${p.unit}">10 cup</td>
+            <td class="num" th:text="${p.reorderLevel}">5</td>
+            <td>
+                <span class="tag out" th:if="${p.outOfStock}">Out</span>
+                <span class="tag low" th:if="${p.lowStock}">Low</span>
+                <span class="tag okay" th:unless="${p.outOfStock or p.lowStock}">OK</span>
+            </td>
+            <td class="actions">
+                <a th:href="@{/products/{id}/edit(id=${p.id})}">Edit</a>
+                <form th:action="@{/products/{id}/delete(id=${p.id})}" method="post"
+                      onsubmit="return confirm('Delete this product?')">
+                    <button class="link danger" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(products)}"><td colspan="7" class="muted">No products found.</td></tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

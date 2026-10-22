@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Access denied')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main>
+    <div class="card">
+        <h1>403 · Access denied</h1>
+        <p>Your role is not allowed to open this page. Staff can only record sales.</p>
+        <a class="btn" th:href="@{/}">Go to my home page</a>
+    </div>
+</main>
+</body>
+</html>

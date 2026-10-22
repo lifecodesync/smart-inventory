@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · Smart Inventory'">Smart Inventory</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav th:fragment="nav" class="nav">
+    <a class="brand" th:href="@{/}">🍵 Canteen Inventory</a>
+    <div class="links">
+        <a sec:authorize="hasRole('MANAGER')" th:href="@{/dashboard}">Dashboard</a>
+        <a sec:authorize="hasRole('MANAGER')" th:href="@{/products}">Products</a>
+        <a th:href="@{/sales/new}">Sell</a>
+        <a sec:authorize="hasRole('MANAGER')" th:href="@{/purchases/new}">Purchase</a>
+        <a sec:authorize="hasRole('MANAGER')" th:href="@{/movements}">History</a>
+        <a sec:authorize="hasRole('MANAGER')" th:href="@{/forecast}">Forecast</a>
+        <a sec:authorize="hasRole('MANAGER')" th:href="@{/alerts}">Alerts</a>
+    </div>
+    <form class="logout" th:action="@{/logout}" method="post">
+        <span class="who"><span sec:authentication="name">user</span>
+            (<span sec:authorize="hasRole('MANAGER')">manager</span><span sec:authorize="hasRole('STAFF')">staff</span>)</span>
+        <button type="submit" class="btn small ghost">Log out</button>
+    </form>
+</nav>
+
+<div th:fragment="flash">
+    <div class="flash ok" th:if="${success}" th:text="${success}">ok</div>
+    <div class="flash err" th:if="${error}" th:text="${error}">error</div>
+</div>
+</body>
+</html>

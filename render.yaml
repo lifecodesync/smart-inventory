@@ -1,0 +1,33 @@
+# Render "Blueprint": infrastructure as code. Render reads this file and creates
+# 1) a managed PostgreSQL database and 2) a web service built from our Dockerfile.
+databases:
+  - name: inventory-db
+    plan: free
+    region: singapore          # closest Render region to India
+    databaseName: inventory
+    user: inventory
+
+services:
+  - type: web
+    name: smart-inventory
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        fromDatabase: { name: inventory-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: inventory-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: inventory-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: inventory-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: inventory-db, property: password }
+      - key: MANAGER_PASSWORD
+        sync: false            # Render asks you to type it in the dashboard; never stored in Git
+      - key: STAFF_PASSWORD
+        sync: false
+      - key: SEED_DEMO
+        value: "true"

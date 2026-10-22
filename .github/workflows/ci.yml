@@ -1,0 +1,37 @@
+# Continuous Integration: on every push, GitHub starts a fresh Linux machine in the cloud,
+# starts PostgreSQL, builds the app and runs ALL tests. A red X on GitHub = something broke.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: inventory_test
+          POSTGRES_USER: inventory
+          POSTGRES_PASSWORD: inventory
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U inventory"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Build and test
+        run: mvn -B verify
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: target/surefire-reports/

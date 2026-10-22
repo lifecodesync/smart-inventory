@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('History')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main>
+    <h1>Stock history <span class="muted small">(latest 100)</span></h1>
+    <table>
+        <thead><tr><th>Time (IST)</th><th>Type</th><th>Product</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Total</th><th>By</th></tr></thead>
+        <tbody>
+        <tr th:each="m : ${movements}">
+            <td th:text="${@fmt.dateTime(m.createdAt)}">time</td>
+            <td><span th:class="${m.type.name() == 'SALE'} ? 'tag low' : 'tag okay'" th:text="${m.type}">SALE</span></td>
+            <td th:text="${m.product.name}">Tea</td>
+            <td class="num" th:text="${m.quantity}">1</td>
+            <td class="num" th:text="'₹' + ${#numbers.formatDecimal(m.unitPrice, 1, 2)}">₹10</td>
+            <td class="num" th:text="'₹' + ${#numbers.formatDecimal(m.total, 1, 2)}">₹10</td>
+            <td th:text="${m.createdBy}">staff</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+digraph G {
+  rankdir=LR; graph [fontname="Helvetica", fontsize=11, pad=0.3, nodesep=0.5, ranksep=0.7, bgcolor="white"];
+  node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#334155"];
+  edge [fontname="Helvetica", fontsize=9, color="#475569"];
+
+  subgraph cluster_users { label="Users (any browser)"; style="rounded,dashed"; color="#94a3b8";
+    mgr [label="Manager\n(laptop)"]; stf [label="Staff\n(counter phone/PC)"]; }
+
+  subgraph cluster_dev { label="Developer + CI"; style="rounded,dashed"; color="#94a3b8";
+    dev [label="Code on laptop\n(Git)"]; gh [label="GitHub repo"]; ci [label="GitHub Actions CI\nbuild + JUnit tests\n(PostgreSQL service)"]; }
+
+  subgraph cluster_render { label="Render cloud (PaaS) · Singapore region"; style="rounded,filled"; fillcolor="#f0fdfa"; color="#0f766e";
+    lb [label="Render load balancer\nHTTPS / TLS\n*.onrender.com", fillcolor="#ccfbf1"];
+    subgraph cluster_ws { label="Web Service (Docker container)"; style="rounded"; color="#0f766e";
+      app [label="Spring Boot app (Java 21)\nSecurity · Controllers · Services\nThymeleaf pages · Flyway\n/actuator/health", fillcolor="#ffffff"]; }
+    db [label="Managed PostgreSQL 16\n(DBaaS)\nproduct · stock_movement · app_user", shape=cylinder, fillcolor="#e0f2fe"];
+    env [label="Environment variables\nDB_*  MANAGER_PASSWORD\n(secrets, not in code)", shape=note, fillcolor="#fef9c3"];
+  }
+
+  mgr -> lb [label="HTTPS"]; stf -> lb [label="HTTPS"];
+  lb -> app [label="HTTP :PORT"];
+  app -> db [label="JDBC (private network)"];
+  env -> app [style=dashed];
+  dev -> gh [label="git push"]; gh -> ci [label="on push"];
+  gh -> app [label="auto-deploy:\ndocker build", style=dashed];
+}
