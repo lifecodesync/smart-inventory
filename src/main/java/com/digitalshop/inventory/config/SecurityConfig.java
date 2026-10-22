@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.csrf.CsrfException;
 
 @Configuration
 public class SecurityConfig {
@@ -32,8 +35,25 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
                 .permitAll())
-            .exceptionHandling(ex -> ex.accessDeniedPage("/403"));
+            .exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler()));
         return http.build();
+    }
+
+    /**
+     * Login form with an expired CSRF token (e.g. the page was open while the server restarted)
+     * -> back to the login page with a friendly message. Every other denial -> our 403 page.
+     */
+    private AccessDeniedHandler accessDeniedHandler() {
+        AccessDeniedHandlerImpl toForbiddenPage = new AccessDeniedHandlerImpl();
+        toForbiddenPage.setErrorPage("/403");
+        return (request, response, denied) -> {
+            String path = request.getRequestURI().substring(request.getContextPath().length());
+            if (denied instanceof CsrfException && "/login".equals(path)) {
+                response.sendRedirect(request.getContextPath() + "/login?expired");
+            } else {
+                toForbiddenPage.handle(request, response, denied);
+            }
+        };
     }
 
     /** BCrypt = slow, salted, one-way password hashing. Strength 10 ≈ 1024 rounds. */

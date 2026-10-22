@@ -127,6 +127,14 @@ class SecurityAndWebTest extends DatabaseTest {
         mvc.perform(post("/products").param("name", "X")).andExpect(status().isForbidden());
     }
 
+    @Test
+    void loginWithExpiredCsrfTokenGoesBackToLoginPageNot405() throws Exception {
+        // Bug #5: an old login page (server restarted) posted with an invalid token -> used to show "405"
+        mvc.perform(post("/login").param("username", "manager").param("password", "Manager@123")
+                        .with(csrf().useInvalidToken()))
+                .andExpect(redirectedUrl("/login?expired"));
+    }
+
     // ---------- sale through the web form ----------
 
     @Test

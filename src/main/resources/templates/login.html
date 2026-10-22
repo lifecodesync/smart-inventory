@@ -8,6 +8,7 @@
     <p class="muted">Sign in to continue</p>
     <div class="flash err" th:if="${param.error}">Wrong username or password.</div>
     <div class="flash ok" th:if="${param.logout}">You have been logged out.</div>
+    <div class="flash err" th:if="${param.expired}">Your session expired (the server restarted). Please sign in again.</div>
     <form th:action="@{/login}" method="post">
         <label>Username <input name="username" autofocus required></label>
         <label>Password <input name="password" type="password" required></label>
