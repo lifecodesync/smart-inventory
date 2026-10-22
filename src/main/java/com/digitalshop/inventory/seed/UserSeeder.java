@@ -12,7 +12,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/** Creates the two login accounts on first start. Passwords come from environment variables. */
+/**
+ * Makes sure the two login accounts exist and their passwords match the environment variables
+ * MANAGER_PASSWORD / STAFF_PASSWORD. Changing the variable in Render and redeploying changes the password.
+ */
 @Component
 @Order(1)
 public class UserSeeder implements ApplicationRunner {
@@ -36,9 +39,16 @@ public class UserSeeder implements ApplicationRunner {
     }
 
     private void create(String username, String rawPassword, Role role) {
-        if (!users.existsByUsername(username)) {
+        users.findByUsername(username).ifPresentOrElse(user -> {
+            // BCrypt hashes can't be compared directly; matches() re-hashes the raw password with the stored salt
+            if (!encoder.matches(rawPassword, user.getPasswordHash())) {
+                user.setPasswordHash(encoder.encode(rawPassword));
+                users.save(user);
+                log.info("Password for user '{}' updated from environment variable", username);
+            }
+        }, () -> {
             users.save(new AppUser(username, encoder.encode(rawPassword), role));
             log.info("Created user '{}' with role {}", username, role);
-        }
+        });
     }
 }
