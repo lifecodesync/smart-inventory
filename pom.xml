@@ -12,11 +12,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.canteen</groupId>
+    <groupId>com.digitalshop</groupId>
     <artifactId>smart-inventory</artifactId>
     <version>1.0.0</version>
     <name>Smart Inventory Management System</name>
-    <description>Cloud-based inventory system for a college canteen</description>
+    <description>Cloud-based inventory system for an electronics and mobile store</description>
 
     <properties>
         <java.version>21</java.version>

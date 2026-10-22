@@ -8,7 +8,7 @@
     <p class="muted">Red = out of stock · Orange = at or below reorder level · Yellow = forecast says it will run out within 7 days.</p>
     <ul class="alerts big">
         <li th:each="a : ${alerts}" th:class="${a.level}">
-            <b th:text="${a.productName}">Tea</b> <span th:text="${a.message}"></span>
+            <b th:text="${a.productName}">Earbuds</b> <span th:text="${a.message}"></span>
             <a th:href="@{/purchases/new}">Restock →</a></li>
         <li th:if="${#lists.isEmpty(alerts)}" class="muted">No alerts. All good.</li>
     </ul>

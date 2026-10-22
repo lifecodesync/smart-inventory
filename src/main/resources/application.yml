@@ -38,7 +38,7 @@ management:
 
 app:
   zone: Asia/Kolkata            # "today" means today in India
-  seed-demo: ${SEED_DEMO:true}  # create sample canteen products + 90 days of sales if DB is empty
+  seed-demo: ${SEED_DEMO:true}  # create sample electronics products + 90 days of sales if DB is empty
   manager-password: ${MANAGER_PASSWORD:Manager@123}
   staff-password: ${STAFF_PASSWORD:Staff@123}
   forecast:
@@ -51,4 +51,4 @@ app:
 
 logging:
   level:
-    com.canteen.inventory: INFO
+    com.digitalshop.inventory: INFO

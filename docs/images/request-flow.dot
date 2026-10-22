@@ -2,13 +2,13 @@ digraph S {
   rankdir=TB; graph [fontname="Helvetica", fontsize=11, bgcolor="white", nodesep=0.3, ranksep=0.35];
   node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#334155", width=4.6];
   edge [color="#475569"];
-  a [label="1. Staff picks 'Samosa', qty 1, clicks Sell  (browser → POST /sales)"];
+  a [label="1. Staff picks 'Wireless Earbuds', qty 1, clicks Sell  (browser → POST /sales)"];
   b [label="2. Spring Security: logged in? role STAFF or MANAGER? CSRF token valid?"];
   c [label="3. StockController: @Valid form (product chosen, qty ≥ 1) else show errors"];
   d [label="4. StockService.recordSale()  — @Transactional starts (BEGIN)"];
   e [label="5. UPDATE product SET stock = stock − 1 WHERE id = ? AND stock >= 1\n(row locked; check + change in ONE statement)", fillcolor="#ccfbf1"];
   f [label="6. rows updated = 1 → INSERT stock_movement (SALE)  → COMMIT"];
   g [label="   rows updated = 0 → InsufficientStockException → ROLLBACK → '409: only 0 left'", fillcolor="#fee2e2"];
-  h [label="7. Redirect → GET /sales/new shows 'Sold 1 x Samosa = ₹15'"];
+  h [label="7. Redirect → GET /sales/new shows 'Sold 1 x Wireless Earbuds = ₹1999'"];
   a->b->c->d->e->f->h; e->g;
 }

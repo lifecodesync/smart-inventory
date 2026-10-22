@@ -14,7 +14,7 @@
                     <option value="">— choose —</option>
                     <option th:each="p : ${products}" th:value="${p.id}"
                             th:text="${p.name} + '  (₹' + ${p.price} + ', ' + ${p.stock} + ' ' + ${p.unit} + ' left)'"
-                            th:disabled="${mode == 'sale' and p.outOfStock}">Tea</option>
+                            th:disabled="${mode == 'sale' and p.outOfStock}">Earbuds</option>
                 </select>
                 <small class="fielderr" th:if="${#fields.hasErrors('productId')}" th:errors="*{productId}"></small>
             </label>
@@ -33,7 +33,7 @@
             <tr th:each="m : ${recent}">
                 <td th:text="${@fmt.time(m.createdAt)}">time</td>
                 <td><span th:class="${m.type.name() == 'SALE'} ? 'tag low' : 'tag okay'" th:text="${m.type}">SALE</span></td>
-                <td th:text="${m.product.name}">Tea</td>
+                <td th:text="${m.product.name}">Earbuds</td>
                 <td class="num" th:text="${m.quantity}">1</td>
                 <td th:text="${m.createdBy}">staff</td>
             </tr>

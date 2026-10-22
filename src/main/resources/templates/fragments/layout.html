@@ -8,7 +8,7 @@
 </head>
 <body>
 <nav th:fragment="nav" class="nav">
-    <a class="brand" th:href="@{/}">🍵 Canteen Inventory</a>
+    <a class="brand" th:href="@{/}">📱 Smart Inventory · Mobile Store</a>
     <div class="links">
         <a sec:authorize="hasRole('MANAGER')" th:href="@{/dashboard}">Dashboard</a>
         <a sec:authorize="hasRole('MANAGER')" th:href="@{/products}">Products</a>

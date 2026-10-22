@@ -31,20 +31,20 @@
         <section class="card">
             <h2>Best sellers (30 days)</h2>
             <table><tbody>
-            <tr th:each="s : ${d.best}"><td th:text="${s.name}">Tea</td><td class="num" th:text="${s.units} + ' units'">0</td></tr>
+            <tr th:each="s : ${d.best}"><td th:text="${s.name}">Earbuds</td><td class="num" th:text="${s.units} + ' units'">0</td></tr>
             </tbody></table>
         </section>
         <section class="card">
             <h2>Slow sellers (30 days)</h2>
             <table><tbody>
-            <tr th:each="s : ${d.slow}"><td th:text="${s.name}">Upma</td><td class="num" th:text="${s.units} + ' units'">0</td></tr>
+            <tr th:each="s : ${d.slow}"><td th:text="${s.name}">Smartwatch</td><td class="num" th:text="${s.units} + ' units'">0</td></tr>
             </tbody></table>
         </section>
         <section class="card">
             <h2>Alerts</h2>
             <ul class="alerts">
                 <li th:each="a : ${alerts}" th:class="${a.level}">
-                    <b th:text="${a.productName}">Tea</b> <span th:text="${a.message}"></span></li>
+                    <b th:text="${a.productName}">Earbuds</b> <span th:text="${a.message}"></span></li>
                 <li th:if="${#lists.isEmpty(alerts)}" class="muted">No alerts. All good.</li>
             </ul>
             <a th:href="@{/forecast}">See forecast &amp; restock plan →</a>

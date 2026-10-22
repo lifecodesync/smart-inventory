@@ -1,17 +1,17 @@
 # Smart Inventory Management System (Cloud)
 
-A cloud-based inventory system for a college canteen. Built with Java 21, Spring Boot 3.5, PostgreSQL 16 and Docker, and deployed on **Render** (PaaS) with a managed PostgreSQL database.
+A cloud-based inventory system for an **electronics and mobile accessories store** (phones, chargers, cables, earbuds, power banks, smartwatches). Built with Java 21, Spring Boot 3.5, PostgreSQL and Docker, and deployed on **Render** (PaaS) with a managed PostgreSQL database.
 
 **Live URL:** `https://<your-service>.onrender.com` (fill in after deploy)
 **Demo logins:** `manager / Manager@123` (everything) · `staff / Staff@123` (sales only). In the cloud, the passwords are whatever you set in Render.
 
 ## The problem
-The canteen tracks stock in a notebook. This causes three problems:
-1. Popular items (samosa, tea) run out at peak time.
-2. Slow items expire.
-3. Nobody knows today's sales until the evening.
+The shop tracks stock in a register and memory. This causes three problems:
+1. Fast-moving items (cables, screen guards, chargers) run out on busy weekends.
+2. Costly slow items (speakers, smartwatches) lock up money on the shelf.
+3. Nobody knows today's sales or profit until closing time.
 
-Two staff at two counters can also sell the "last" item twice.
+Two staff at two counters can also sell the "last" pair of earbuds twice.
 
 ## What it does
 | Feature | Who |
@@ -39,7 +39,7 @@ Data model: ![erd](docs/images/erd.png)
 
 ## Project layout (where things are and why)
 ```
-src/main/java/com/canteen/inventory/
+src/main/java/com/digitalshop/inventory/
   config/      SecurityConfig (who can open what), AppProperties (typed settings), ClockConfig
   domain/      Product, StockMovement, AppUser: Java classes mapped to tables (JPA entities)
   repository/  Database access. ProductRepository.decrementStock = the anti-oversell query
@@ -48,6 +48,7 @@ src/main/java/com/canteen/inventory/
   seed/        Creates the manager/staff users and 90 days of demo data on first start
 src/main/resources/
   db/migration/V1__init.sql   tables, CHECK rules, indexes
+  db/migration/V2__...sql     switches the demo data to the electronics store
   templates/                  Thymeleaf HTML pages
   application.yml             settings; every secret read from an env var
 src/test/java/...             JUnit 5 tests (unit, web/security, database, concurrency)
@@ -67,7 +68,7 @@ docker compose up -d db          # PostgreSQL 16 on localhost:5432 (+ inventory_
 mvn spring-boot:run              # app on http://localhost:8080
 mvn test                         # all tests (needs the db container running)
 ```
-The first start creates the 2 users and 90 days of demo sales (turn this off with `SEED_DEMO=false`).
+The first start creates the 2 users and 12 store products with 90 days of demo sales (turn this off with `SEED_DEMO=false`).
 
 To run everything in containers: `docker compose --profile full up --build`.
 
@@ -87,7 +88,7 @@ See **[docs/DEPLOY.md](docs/DEPLOY.md)**: GitHub, then a Render Blueprint, then 
 - **Server-rendered pages (Thymeleaf), not React + API:** one language, less to build and defend. The cost is less interactive pages.
 - **Atomic conditional UPDATE + DB CHECK, not optimistic locking:** no retries needed and correct under any load on one database. The cost is that the logic lives partly in SQL.
 - **Render free tier:** no credit card, deploy from GitHub in minutes. The costs are that the app sleeps after 15 min idle (first request ~1 min) and the free database expires after 30 days.
-- **Simple forecasting:** explainable and testable by hand. It ignores the weekly pattern (Sunday dip), so Monday forecasts have higher error.
+- **Simple forecasting:** explainable and testable by hand. It ignores the weekly pattern (weekend rush), so weekend forecasts have higher error.
 
 ## Next improvements
 Weekly-seasonal forecast (Holt-Winters), supplier table and purchase orders, email/WhatsApp alerts, barcode scanning, an audit log of product edits, and moving to AWS (ECS + RDS) with autoscaling.

@@ -3,7 +3,8 @@
 <head th:replace="~{fragments/layout :: head('Login')}"></head>
 <body class="center">
 <div class="card login">
-    <h1>🍵 Canteen Inventory</h1>
+    <h1>📱 Smart Inventory</h1>
+    <p class="muted" style="margin-top:-8px">Mobile &amp; Electronics Store</p>
     <p class="muted">Sign in to continue</p>
     <div class="flash err" th:if="${param.error}">Wrong username or password.</div>
     <div class="flash ok" th:if="${param.logout}">You have been logged out.</div>

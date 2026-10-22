@@ -17,10 +17,10 @@
         <thead><tr><th>Name</th><th>Category</th><th class="num">Price</th><th class="num">Stock</th><th class="num">Reorder at</th><th>Status</th><th></th></tr></thead>
         <tbody>
         <tr th:each="p : ${products}">
-            <td th:text="${p.name}">Tea</td>
-            <td th:text="${p.category}">Beverages</td>
-            <td class="num" th:text="'₹' + ${#numbers.formatDecimal(p.price, 1, 2)}">₹10.00</td>
-            <td class="num" th:text="${p.stock} + ' ' + ${p.unit}">10 cup</td>
+            <td th:text="${p.name}">Earbuds</td>
+            <td th:text="${p.category}">Audio</td>
+            <td class="num" th:text="'₹' + ${#numbers.formatDecimal(p.price, 1, 2)}">₹999.00</td>
+            <td class="num" th:text="${p.stock} + ' ' + ${p.unit}">10 piece</td>
             <td class="num" th:text="${p.reorderLevel}">5</td>
             <td>
                 <span class="tag out" th:if="${p.outOfStock}">Out</span>

@@ -1,6 +1,6 @@
 # Forecast worked by hand (matches ForecasterTest)
 
-Samosa sales for 7 days: **20, 22, 18, 25, 30, 10, 2** (the last two are Saturday and Sunday).
+Wired-earphone sales for 7 days: **20, 22, 18, 25, 30, 10, 2** (a made-up week with a sudden drop at the end, e.g. a competitor sale nearby).
 
 **Moving average (window 7):** (20+22+18+25+30+10+2) / 7 = 127 / 7 = **18.14 per day**, which gives a 7-day demand of 127.
 
@@ -12,7 +12,7 @@ Samosa sales for 7 days: **20, 22, 18, 25, 30, 10, 2** (the last two are Saturda
 - 0.5·10 + 0.5·26.125 = 18.06
 - 0.5·2 + 0.5·18.06 = **10.03 per day**
 
-Smoothing reacts fast to the weekend dip. The moving average is steadier.
+Smoothing reacts fast to the sudden drop. The moving average is steadier.
 
 **MAE (which method was right more often):** for each of the last N days, forecast it using only earlier days, then take |actual − forecast| and average them. Example with [10, 20, 30, 40] and a 2-day MA: the forecasts are 15 and 25, the actuals are 30 and 40, so the errors are 15 and 15 and **MAE = 15**.
 

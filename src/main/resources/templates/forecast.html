@@ -22,7 +22,7 @@
         </tr></thead>
         <tbody>
         <tr th:each="r : ${rows}" th:classappend="${r.restockQuantity > 0} ? 'hl'">
-            <td th:text="${r.product.name}">Tea</td>
+            <td th:text="${r.product.name}">Earbuds</td>
             <td class="num" th:text="${r.product.stock}">0</td>
             <td class="num" th:text="${#numbers.formatDecimal(r.movingAvgDaily, 1, 1)}">0</td>
             <td class="num" th:text="${#numbers.formatDecimal(r.maeMovingAvg, 1, 2)}">0</td>
@@ -37,7 +37,7 @@
         </tbody>
     </table>
     <p class="muted small">MA = moving average, ES = exponential smoothing, MAE = mean absolute error in units/day (lower is better).
-        Sundays have very low sales, so the weekly pattern makes both methods less accurate on Mondays.</p>
+        Weekends are the busiest days, so the weekly pattern makes both methods less accurate on Saturdays and Sundays.</p>
 </main>
 </body>
 </html>
